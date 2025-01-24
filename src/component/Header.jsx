@@ -1,10 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const Header = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, userDetails, logout } = useContext(AuthContext);
 
-  // Menu items array
+  // State to manage the visibility of the mobile menu
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Function to get user initials from their name
+  const getUserInitials = () => {
+    if (userDetails?.name) {
+      return userDetails?.name
+        .split(" ")
+        .map((n) => n[0]?.toUpperCase())
+        .join("");
+    }
+    return "U"; // Default fallback initial
+  };
+
   const menu = [
     { name: "Home", link: "/" },
     { name: "Top Rated", link: "/top-rated" },
@@ -12,51 +27,8 @@ const Header = () => {
     { name: "Contact", link: "https://yuvis-portfolio.vercel.app/" },
   ];
 
-  // State to manage the visibility of the mobile menu
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // State to manage user login status and name
-  const [userName, setUserName] = useState(null);
-
-  useEffect(() => {
-    // Function to check and decode the auth token
-    const checkAuthToken = () => {
-      const authToken = localStorage.getItem("authToken"); // Retrieve the token
-      if (authToken) {
-        try {
-          const user = JSON.parse(atob(authToken.split(".")[1])); // Decode JWT payload
-          setUserName(user.name); // Set user's name
-        } catch (error) {
-          console.error("Error parsing auth token:", error);
-        }
-      } else {
-        setUserName(null); // Clear the userName if no token exists
-      }
-    };
-
-    // Initial check
-    checkAuthToken();
-
-    // Add event listener to listen for changes in localStorage
-    window.addEventListener("storage", checkAuthToken);
-
-    // Cleanup event listener on unmount
-    return () => {
-      window.removeEventListener("storage", checkAuthToken);
-    };
-  }, []);
-
-  // Handle logout
-  const handleLogout = () => {
-    localStorage.removeItem("authToken"); // Remove token from localStorage
-    setUserName(null); // Clear user info
-    navigate("/login");
-  };
-
   return (
-    <header
-      className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white px-4 py-3 md:px-8 flex items-center justify-between shadow-lg"
-    >
+    <header className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white px-4 py-3 md:px-8 flex items-center justify-between shadow-lg">
       {/* Logo Section */}
       <div className="text-lg flex flex-row items-center h-12 font-bold">
         <a href="/" className="hover:text-gray-300">
@@ -77,21 +49,21 @@ const Header = () => {
         ))}
       </nav>
 
-      {/* User or Login/Sign-Up Section */}
+      {/* User Section */}
       <div className="flex items-center gap-4">
-        {userName ? (
+        {isAuthenticated ? (
           <div className="flex items-center gap-2">
-            {/* Profile Icon */}
+            {/* User Initials */}
             <div
               className="w-10 h-10 rounded-full bg-white text-gray-800 font-bold flex items-center justify-center cursor-pointer"
-              title={userName}
-              onClick={() => navigate("/profile")} // Navigate to profile page on click
+              title={userDetails?.name || "User"}
+              onClick={() => navigate("/profile")}
             >
-              {userName.charAt(0).toUpperCase()}
+              {getUserInitials()}
             </div>
             {/* Logout Button */}
             <button
-              onClick={handleLogout}
+              onClick={logout}
               className="text-sm bg-red-600 px-3 py-1 rounded-lg hover:bg-red-700 transition"
             >
               Logout
@@ -151,9 +123,9 @@ const Header = () => {
               {item.name}
             </a>
           ))}
-          {userName ? (
+          {isAuthenticated ? (
             <button
-              onClick={handleLogout}
+              onClick={logout}
               className="w-full py-2 bg-red-600 text-white text-sm hover:bg-red-700 transition"
             >
               Logout
