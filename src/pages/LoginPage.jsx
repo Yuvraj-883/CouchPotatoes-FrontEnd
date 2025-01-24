@@ -35,7 +35,7 @@ const Login = () => {
 
     try {
       // Send the login request
-      const response = await fetch("http://localhost:8000/authentication/login", {
+      const response = await fetch("https://couch-potatoes-backend-smoky.vercel.app/authentication/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

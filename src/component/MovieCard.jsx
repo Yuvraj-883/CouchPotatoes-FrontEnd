@@ -23,7 +23,7 @@ function MovieCard({ movie }) {
     try {
       const authToken = localStorage.getItem("authToken");
 
-      const response = await fetch(`http://localhost:8000/movie/like/${movie._id}`, {
+      const response = await fetch(`https://couch-potatoes-backend-smoky.vercel.app/movie/like/${movie._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

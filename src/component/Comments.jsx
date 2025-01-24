@@ -98,7 +98,7 @@ const Comments = ({ movieId }) => {
     const fetchComments = async () => {
       try {
         setLoadingComments(true);
-        const response = await fetch(`http://localhost:8000/comments/${movieId}`);
+        const response = await fetch(`https://couch-potatoes-backend-smoky.vercel.app/comments/${movieId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch comments");
         }
@@ -120,7 +120,7 @@ const Comments = ({ movieId }) => {
     try {
       setLoadingReplies((prev) => ({ ...prev, [commentId]: true }));
 
-      const response = await fetch(`http://localhost:8000/comments/replies/${commentId}`);
+      const response = await fetch(`https://couch-potatoes-backend-smoky.vercel.app/comments/replies/${commentId}`);
       if (!response.ok) {
         throw new Error(`Failed to fetch replies: ${response.statusText}`);
       }
@@ -146,7 +146,7 @@ const Comments = ({ movieId }) => {
     try {
       setLoadingReplies((prev) => ({ ...prev, [replyId]: true }));
 
-      const response = await fetch(`http://localhost:8000/comments/replies/${replyId}`);
+      const response = await fetch(`https://couch-potatoes-backend-smoky.vercel.app/comments/replies/${replyId}`);
       console.log(response);
       if (!response.ok) {
         throw new Error(`Failed to fetch replies to reply: ${response.statusText}`);
@@ -189,7 +189,7 @@ const Comments = ({ movieId }) => {
     }
 
     try {
-      const response = await fetch(`http://localhost:8000/comments`, {
+      const response = await fetch(`https://couch-potatoes-backend-smoky.vercel.app/comments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -229,7 +229,7 @@ const Comments = ({ movieId }) => {
     }
 
     try {
-      const response = await fetch(`http://localhost:8000/comments/reply`, {
+      const response = await fetch(`https://couch-potatoes-backend-smoky.vercel.app/comments/reply`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -275,7 +275,7 @@ const Comments = ({ movieId }) => {
     }
 
     try {
-      const response = await fetch(`http://localhost:8000/comments/reply`, {
+      const response = await fetch(`https://couch-potatoes-backend-smoky.vercel.app/comments/reply`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

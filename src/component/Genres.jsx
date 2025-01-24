@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 const GenreList = ({ onGenreSelect, selectedGenres }) => {
-  const apiUrl = 'http://localhost:8000/movie/genres';
+  const apiUrl = 'https://couch-potatoes-backend-smoky.vercel.app/movie/genres';
   const [genres, setGenres] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);

@@ -13,7 +13,7 @@ const TopRatedMovies = () => {
     // Fetch top-rated movies from your backend API with pagination
     const fetchTopRatedMovies = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/movie/top-rated?page=${page}&size=${pageSize}`);
+        const res = await fetch(`https://couch-potatoes-backend-smoky.vercel.app/movie/top-rated?page=${page}&size=${pageSize}`);
         const data = await res.json();
 
         setMovies(data.movies); // Set movies from API response

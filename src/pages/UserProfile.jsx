@@ -23,7 +23,7 @@ const UserProfile = () => {
 
     const fetchUserDetails = async () => {
       try {
-        const response = await fetch("http://localhost:8000/user/details", {
+        const response = await fetch("https://couch-potatoes-backend-smoky.vercel.app/user/details", {
           headers: {
             Authorization: `Bearer ${authToken}`, // Pass token in Authorization header
           },

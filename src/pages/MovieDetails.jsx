@@ -5,7 +5,7 @@ import Comments from "../component/Comments"; // Import the Comments component
 function MovieDetails() {
   const [movieDetails, setMovieDetails] = useState(null);
   const { id } = useParams();
-  const url = `http://localhost:8000/movie/${id}`;
+  const url = `https://couch-potatoes-backend-smoky.vercel.app/movie/${id}`;
 
   // Async function to fetch movie details
   async function fetchMovieDetails(url) {

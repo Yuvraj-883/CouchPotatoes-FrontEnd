@@ -43,7 +43,7 @@ const Register = () => {
     // Send the form data to the backend for registration
     try {
       const response = await fetch(
-        "http://localhost:8000/authentication/register",
+        "https://couch-potatoes-backend-smoky.vercel.app/authentication/register",
         {
           method: "POST",
           headers: {

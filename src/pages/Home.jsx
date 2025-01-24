@@ -6,7 +6,7 @@ import Pagination from '../component/Pagination';
 import SearchBar from '../component/Search';
 
 export default function Home() {
-  const url = 'http://localhost:8000/movie';
+  const url = 'https://couch-potatoes-backend-smoky.vercel.app/movie';
   const [movies, setMovies] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);

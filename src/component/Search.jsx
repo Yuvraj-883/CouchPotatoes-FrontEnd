@@ -6,7 +6,7 @@ function SearchBar({ onSearch }) {
   const handleSearch = async () => {
     if (query.trim()) {
       try {
-        const res = await fetch(`http://localhost:8000/movie/search?q=${query}`);
+        const res = await fetch(`https://couch-potatoes-backend-smoky.vercel.app/movie/search?q=${query}`);
         const data = await res.json();
 
         if (data && Array.isArray(data.result)) {

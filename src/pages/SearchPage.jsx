@@ -15,7 +15,7 @@ function SearchPage() {
 
   const fetchMovies = async (query) => {
     try {
-      const res = await fetch(`http://localhost:8000/movie/search?q=${query}`);
+      const res = await fetch(`https://couch-potatoes-backend-smoky.vercel.app/movie/search?q=${query}`);
       const data = await res.json();
 
       // Ensure that the response has 'movies' and it's not empty
