@@ -8,6 +8,8 @@ function MovieCard({ movie }) {
   const [likes, setLikes] = useState(movie.likes || 0);
   const { isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
+  console.log("Movie ID:", movie.id);
+
 
   useEffect(() => {
     setLikes(movie.likes || 0);
@@ -19,11 +21,10 @@ function MovieCard({ movie }) {
       navigate("/login");
       return;
     }
-
     try {
       const authToken = localStorage.getItem("authToken");
 
-      const response = await fetch(`https://couch-potatoes-backend-smoky.vercel.app/movie/like/${movie._id}`, {
+      const response = await fetch(`https://couch-potatoes-backend-smoky.vercel.app/movie/like/${movie.id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +77,7 @@ function MovieCard({ movie }) {
 
         {/* Link to the full details page */}
         <Link
-          to={`/movie/${movie._id}`}
+          to={`/movie/${movie.id}`}
           className="text-blue-500 hover:underline mt-2 block"
         >
           View Full Details
