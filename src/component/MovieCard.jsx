@@ -8,7 +8,7 @@ function MovieCard({ movie }) {
   const [likes, setLikes] = useState(movie.likes || 0);
   const { isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
-  console.log("Movie ID:", movie.id);
+  // console.log("Movie ID:", movie.id);
 
 
   useEffect(() => {
