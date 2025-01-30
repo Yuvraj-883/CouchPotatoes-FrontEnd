@@ -1,72 +1,84 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useQuery, gql } from '@apollo/client';
 import HeroSection from '../component/HeroSection';
 import MovieCard from '../component/MovieCard';
 import GenreList from '../component/Genres';
 import Pagination from '../component/Pagination';
 import SearchBar from '../component/Search';
 
+const GET_MOVIES = gql`
+  query GetMovies($pageNumber: Int, $pageSize: Int, $genres: [String]) {
+    movies(pageNumber: $pageNumber, pageSize: $pageSize, genres: $genres) {
+      movies {
+        id
+        title
+        plot
+        genres
+        poster
+        likes
+        imdb {
+          rating
+          
+        }
+          
+      }
+      totalPages
+      currentPage
+    }
+  }
+`;
+
 export default function Home() {
-  const url = 'https://couch-potatoes-backend-smoky.vercel.app/movie';
-  const [movies, setMovies] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [pageSize, setPageSize] = useState(9);
+  const [pageSize] = useState(9);
+  const [searchResults, setSearchResults] = useState([]);
 
-  // Fetch movies function
-  async function fetchMovies(genres = [], page = 1, pageSize = 9) {
-    let queryParams = `?page=${page}&pageSize=${pageSize}`;
-    if (genres.length) queryParams += `&genres=${genres.join(',')}`;
+  const { loading, error, data } = useQuery(GET_MOVIES, {
+    variables: {
+      pageNumber: currentPage,
+      pageSize: pageSize,
+      genres: selectedGenres,
+    },
+  });
 
-    const res = await fetch(url + queryParams);
-    const data = await res.json();
-
-    setMovies(data.movies);
-    setTotalPages(data.totalPages);
-  }
-
-  // Fetch movies when genres, page, or pageSize changes
-  useEffect(() => {
-    fetchMovies(selectedGenres, currentPage, pageSize);
-  }, [selectedGenres, currentPage, pageSize]);
-
-  // Handle genre selection
   const handleGenreSelect = (genre) => {
     setSelectedGenres((prevGenres) =>
       prevGenres.includes(genre)
         ? prevGenres.filter((g) => g !== genre)
         : [...prevGenres, genre]
     );
+    setCurrentPage(1);
   };
 
-  // Handle search results
-  const handleSearchResults = (searchResults) => {
-    setMovies(searchResults);
-    setCurrentPage(1); // Reset to the first page
-    setTotalPages(1); // Reset total pages since it's a new dataset
+  const handleSearchResults = (results) => {
+    setSearchResults(results);
+    setCurrentPage(1);
   };
+
+  const moviesToDisplay = searchResults.length > 0 ? searchResults : data?.movies?.movies || [];
 
   return (
     <>
       <HeroSection />
-      <GenreList
-        onGenreSelect={handleGenreSelect}
-        selectedGenres={selectedGenres}
-      />
+      <GenreList onGenreSelect={handleGenreSelect} selectedGenres={selectedGenres} />
       <SearchBar onSearch={handleSearchResults} />
+
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error.message}</p>}
+
       <div className="flex flex-col md:flex-row justify-center items-center flex-wrap gap-2">
-        {movies.length > 0 ? (
-          movies.map((movie) => (
-            <MovieCard key={movie._id} movie={movie} />
-          ))
+        {moviesToDisplay.length > 0 ? (
+          moviesToDisplay.map((movie) => <MovieCard key={movie.id} movie={movie} />)
         ) : (
-          <p>No movies found</p>
+          !loading && <p>No movies found</p>
         )}
       </div>
-      {totalPages > 1 && (
+
+      {!searchResults.length && data?.movies?.totalPages > 1 && (
         <Pagination
           currentPage={currentPage}
-          totalPages={totalPages}
+          totalPages={data.movies.totalPages}
           onPageChange={setCurrentPage}
         />
       )}
